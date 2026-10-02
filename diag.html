@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diagnostic affichage</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 16px; background: #F1F4F7; color: #1B2027; }
+    h1 { font-size: 20px; }
+    table { border-collapse: collapse; width: 100%; font-size: 15px; background: #fff; }
+    td { border: 1px solid #D9E0E7; padding: 8px; vertical-align: top; word-break: break-word; }
+    td:first-child { width: 42%; color: #5E6B79; }
+    .verdict { margin-top: 16px; padding: 12px; background: #fff; border: 1px solid #D9E0E7; border-radius: 10px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h1>Diagnostic de l'affichage</h1>
+  <p>Faites une capture d'écran de cette page et envoyez-la.</p>
+  <table id="t"></table>
+  <div class="verdict" id="v"></div>
+  <script>
+    const rows = {
+      'Largeur de la page (px CSS)': window.innerWidth,
+      'Hauteur de la page (px CSS)': window.innerHeight,
+      'Largeur de l\'écran (px CSS)': screen.width,
+      'Densité de pixels (DPR)': window.devicePixelRatio,
+      'Zoom (visualViewport)': window.visualViewport ? window.visualViewport.scale : '?',
+      'Mode affichage': matchMedia('(display-mode: standalone)').matches ? 'app installée' : 'navigateur',
+      'Navigateur': navigator.userAgent,
+    };
+    const t = document.getElementById('t');
+    for (const [k, v] of Object.entries(rows)) {
+      const tr = t.insertRow();
+      tr.insertCell().textContent = k;
+      tr.insertCell().textContent = String(v);
+    }
+    const desktopMode = /X11; Linux|Windows NT|Macintosh/.test(navigator.userAgent) && screen.width < 900;
+    document.getElementById('v').textContent = desktopMode
+      ? 'Chrome est en mode « Version pour ordinateur » : c\'est la cause probable.'
+      : (window.innerWidth > 700
+          ? 'La page est plus large qu\'un téléphone (' + window.innerWidth + ' px) : affichage réduit.'
+          : 'Largeur normale pour un téléphone.');
+  </script>
+</body>
+</html>
